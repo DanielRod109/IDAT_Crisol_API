@@ -1,6 +1,8 @@
 package pe.crisol.controller;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,7 +46,9 @@ public class MotorizadoController {
     public ResponseEntity<?> registrar_POST(@RequestBody Motorizado motorizado){
 
         service.crear(motorizado);
-        return new ResponseEntity<>("Motorizado creado!",HttpStatus.CREATED);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Motorizado registrado correctamente.");
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     
     @PutMapping("/editar/{motorizadoId}")
@@ -52,6 +56,7 @@ public class MotorizadoController {
 
     {
         Motorizado MotorizadoDb = service.buscar(motorizadoId);
+        Map<String, String> response = new HashMap<>();
 
         if(MotorizadoDb!=null)
         {
@@ -65,11 +70,14 @@ public class MotorizadoController {
         	MotorizadoDb.setPlaca(nmotorizado.getPlaca());
         	
             service.actualizar(MotorizadoDb);
-
-            return new ResponseEntity<>("Editado",HttpStatus.OK);
+            
+            response.put("message", "Motorizado editado correctamente.");
+            
+            return ResponseEntity.status(HttpStatus.OK).body(response);
 
         }
-        return new ResponseEntity<>("404 E",HttpStatus.NOT_FOUND);         
+        response.put("message", "404 E");       
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);        
     }
     
     @DeleteMapping("/borrar/{motorizadoId}")
