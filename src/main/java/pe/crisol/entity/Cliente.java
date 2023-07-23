@@ -12,6 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name="cliente")
 public class Cliente implements Serializable{
@@ -50,7 +53,9 @@ public class Cliente implements Serializable{
 	}
 	
 	@OneToMany(mappedBy = "cliente")
-	private Collection<Venta> itemsVenta = new ArrayList<>();
+	@JsonManagedReference
+	@JsonIgnore
+	private Collection<Venta> itemsVentaC = new ArrayList<>();
 	
 	
 

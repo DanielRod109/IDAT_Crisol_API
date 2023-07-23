@@ -1,13 +1,19 @@
 package pe.crisol.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "motorizado")
@@ -26,7 +32,13 @@ public class Motorizado implements Serializable {
 	private Integer dni;
 	@Column
 	private String placa;
-
+	
+	/*
+	@OneToMany(mappedBy = "motorizado")
+	@JsonManagedReference
+	@JsonIgnore
+	private Collection<Venta> itemsVentaM = new ArrayList<>();
+*/
 	public Motorizado() {
 	}
 

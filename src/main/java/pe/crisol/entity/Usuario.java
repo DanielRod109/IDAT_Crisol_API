@@ -1,6 +1,8 @@
 package pe.crisol.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +11,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="usuario")
@@ -43,6 +49,12 @@ private static final long serialVersionUID = 1L;
 	@JoinColumn(name="rol_id",nullable = false)
 	private Rol rol;
 	
+	/*
+	@OneToMany(mappedBy = "usuario")
+	@JsonManagedReference
+	@JsonIgnore
+	private Collection<Venta> itemsVentaU = new ArrayList<>();
+	*/
 	public Usuario() {
 	}
 

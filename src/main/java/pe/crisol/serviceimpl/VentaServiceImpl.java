@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import pe.crisol.entity.Venta;
 import pe.crisol.repository.VentaRepository;
@@ -29,6 +30,13 @@ public class VentaServiceImpl implements VentaService {
 	@Override
 	public Collection<Venta> listarcliente(Integer clienteId) {
 		return vr.obtenerVentasCliente(clienteId);
+	}
+
+
+	@Override
+	@Transactional
+	public Venta crear(Venta venta) {
+		return vr.save(venta);	
 	}
 
 }

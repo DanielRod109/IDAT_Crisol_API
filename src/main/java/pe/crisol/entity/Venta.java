@@ -18,6 +18,9 @@ import javax.persistence.Table;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name="Venta")
 public class Venta implements Serializable {
@@ -44,25 +47,37 @@ public class Venta implements Serializable {
 	
 	
 	@OneToMany(mappedBy="venta")
+	@JsonManagedReference
 	private Collection<DetalleVenta> itemsDetalleVenta = new ArrayList<>();
 	
 	
 	@ManyToOne
+	@JsonBackReference
 	@JoinColumn(name = "cliente_id", nullable =false)
 	private Cliente cliente;
 	
 	
+	/*
+	@ManyToOne
+	@JsonBackReference
+	@JoinColumn(name = "usuario_id")
+	private Usuario usuario;
+	
+	@ManyToOne
+	@JsonBackReference
+	@JoinColumn(name = "motorizado_id")
+	private Motorizado motorizado;
+	
+	*/
+	
+	
+	
+	
 	public Venta() {
 	}
-
-
-
-
-
-
-
+	
 	public Venta(Integer ventaId, Double total, Integer cantidad_total, String estado, LocalDate fecha_venta,
-			String direccion, Boolean tipo) {
+			String direccion, Boolean tipo, Cliente cliente) {
 		this.ventaId = ventaId;
 		this.total = total;
 		this.cantidad_total = cantidad_total;
@@ -129,4 +144,41 @@ public class Venta implements Serializable {
 	public void setTipo(Boolean tipo) {
 		this.tipo = tipo;
 	}
+
+	public Collection<DetalleVenta> getItemsDetalleVenta() {
+		return itemsDetalleVenta;
+	}
+
+	public void setItemsDetalleVenta(Collection<DetalleVenta> itemsDetalleVenta) {
+		this.itemsDetalleVenta = itemsDetalleVenta;
+	}
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+/*
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
+	public Motorizado getMotorizado() {
+		return motorizado;
+	}
+
+	public void setMotorizado(Motorizado motorizado) {
+		this.motorizado = motorizado;
+	}
+	
+	*/
+	
+	
+	
 }

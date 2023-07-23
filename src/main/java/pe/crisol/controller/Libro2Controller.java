@@ -22,137 +22,133 @@ import pe.crisol.service.Libro2Service;
 
 @RequestMapping("/libro")
 
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 public class Libro2Controller {
 
 	@Autowired
-    private Libro2Service service;
+	private Libro2Service service;
 
-    public Libro2Controller() {
-    }
+	public Libro2Controller() {
+	}
 
-    
-    @GetMapping("/listar")
-    public ResponseEntity<?> listar_GET()
-    {
+	@GetMapping("/listar")
+	public ResponseEntity<?> listar_GET() {
 
-        Collection<Libro2> collection=service.findAll();
-        if(collection.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		Collection<Libro2> collection = service.findAll();
+		if (collection.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-        }
+		}
 
+		return new ResponseEntity<>(collection, HttpStatus.OK);
 
-        return new ResponseEntity<>(collection,HttpStatus.OK);
+	}
 
-    }
+	@PostMapping("/registrar")
+	public ResponseEntity<?> registrar_POST(@RequestBody Libro2 libro) {
 
+		service.insert(libro);
 
-    @PostMapping("/registrar")
-    public ResponseEntity<?> registrar_POST(@RequestBody Libro2 libro){
+		Map<String, String> response = new HashMap<>();
 
-        service.insert(libro);
-        return new ResponseEntity<>("¡Libro creado!",HttpStatus.CREATED);
-    }
+		response.put("message", "Libro registrado correctamente.");
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+	}
 
-    
+	@PutMapping("/editar/{id_libro}")
+	public ResponseEntity<?> editar_PUT(@RequestBody Libro2 nlibro, @PathVariable Integer id_libro)
 
-    
+	{
+		Libro2 LibroDb = service.findById(id_libro);
 
-    @PutMapping("/editar/{id_libro}")
-    public ResponseEntity<?> editar_PUT(@RequestBody Libro2 nlibro, @PathVariable Integer id_libro)
+		Map<String, String> response = new HashMap<>();
 
-    {
-        Libro2 LibroDb = service.findById(id_libro);
+		if (LibroDb != null) {
 
-        if(LibroDb!=null)
-        {
+			LibroDb.setNombre(nlibro.getNombre());
 
-            LibroDb.setNombre(nlibro.getNombre());
+			LibroDb.setPeso(nlibro.getPeso());
 
-            LibroDb.setPeso(nlibro.getPeso());
+			LibroDb.setEditorial(nlibro.getEditorial());
 
-            LibroDb.setEditorial(nlibro.getEditorial());
+			LibroDb.setAlto(nlibro.getAlto());
 
-            LibroDb.setAlto(nlibro.getAlto());
+			LibroDb.setAncho(nlibro.getAncho());
 
-            LibroDb.setAncho(nlibro.getAncho());
+			LibroDb.setAedicion(nlibro.getAedicion());
 
-            LibroDb.setAedicion(nlibro.getAedicion());
+			LibroDb.setNpaginas(nlibro.getNpaginas());
 
-            LibroDb.setNpaginas(nlibro.getNpaginas());
+			LibroDb.setAutor(nlibro.getAutor());
 
-            LibroDb.setAutor(nlibro.getAutor());  
-            
-            LibroDb.setPrecio(nlibro.getPrecio());
-            
-            LibroDb.setImg(nlibro.getImg());
+			LibroDb.setPrecio(nlibro.getPrecio());
 
-            service.update(LibroDb);
+			LibroDb.setImg(nlibro.getImg());
 
-            return new ResponseEntity<>(HttpStatus.OK);
+			service.update(LibroDb);
 
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);         
-    }
+			response.put("message", "Libro editado correctamente.");
 
+			return ResponseEntity.status(HttpStatus.OK).body(response);
 
-    @DeleteMapping("/borrar/{id_libro}")
+		}
+		response.put("message", "404 E");
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+	}
 
-    public ResponseEntity<?> borrar_DELETE(@PathVariable Integer id_libro)
+	@DeleteMapping("/borrar/{id_libro}")
 
-    {
-        Libro2 LibroDb = service.findById(id_libro);    
+	public ResponseEntity<?> borrar_DELETE(@PathVariable Integer id_libro)
 
-        if(LibroDb!=null) {
+	{
+		Libro2 LibroDb = service.findById(id_libro);
 
-            service.delete(id_libro);
+		if (LibroDb != null) {
 
-            return new ResponseEntity<>("¡Libro borrado!",HttpStatus.OK);
+			service.delete(id_libro);
 
-        }
+			return new ResponseEntity<>("¡Libro borrado!", HttpStatus.OK);
 
-    return new ResponseEntity<>("¡Libro no existe!",HttpStatus.NOT_FOUND);
+		}
 
-    }
+		return new ResponseEntity<>("¡Libro no existe!", HttpStatus.NOT_FOUND);
 
+	}
 
-    @GetMapping("/buscar/{id_libro}")
-    public ResponseEntity<?> buscar_GET(@PathVariable Integer id_libro){
+	@GetMapping("/buscar/{id_libro}")
+	public ResponseEntity<?> buscar_GET(@PathVariable Integer id_libro) {
 
-        Libro2 LibroDb = service.findById(id_libro);
+		Libro2 LibroDb = service.findById(id_libro);
 
-        if(LibroDb!=null) {
+		if (LibroDb != null) {
 
-            return new ResponseEntity<>(LibroDb,HttpStatus.OK);
-        }
-        return new ResponseEntity<>("¡Libro no existe!",HttpStatus.NOT_FOUND);
-    }
-    
-    @GetMapping("/buscarNombreAutorEditorial/{nombre}")
-    public ResponseEntity<?> buscarPorNombreAutorEditorial_GET(@PathVariable String nombre) {
-        Collection<Libro2> librosEncontrados = service.buscarPorNombre(nombre);
-        Collection<Libro2> librosporAutor = service.buscarPorAutor(nombre);
-        Collection<Libro2> librosporEditorial = service.buscarPorEditorial(nombre);
+			return new ResponseEntity<>(LibroDb, HttpStatus.OK);
+		}
+		return new ResponseEntity<>("¡Libro no existe!", HttpStatus.NOT_FOUND);
+	}
 
-        if (!librosEncontrados.isEmpty()) {
-            return new ResponseEntity<>(librosEncontrados, HttpStatus.OK);
-        }
+	@GetMapping("/buscarNombreAutorEditorial/{nombre}")
+	public ResponseEntity<?> buscarPorNombreAutorEditorial_GET(@PathVariable String nombre) {
+		Collection<Libro2> librosEncontrados = service.buscarPorNombre(nombre);
+		Collection<Libro2> librosporAutor = service.buscarPorAutor(nombre);
+		Collection<Libro2> librosporEditorial = service.buscarPorEditorial(nombre);
 
-        else if (!librosporAutor.isEmpty()) {
-	         return new ResponseEntity<>(librosporAutor, HttpStatus.OK);
-	   }
-	        
-	   else if (!librosporEditorial.isEmpty()) {
-	         return new ResponseEntity<>(librosporEditorial, HttpStatus.OK);
-	   }
-        
-        
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Lo sentimos, no pudimos encontrar tu búsqueda.");
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        
-    }
+		if (!librosEncontrados.isEmpty()) {
+			return new ResponseEntity<>(librosEncontrados, HttpStatus.OK);
+		}
+
+		else if (!librosporAutor.isEmpty()) {
+			return new ResponseEntity<>(librosporAutor, HttpStatus.OK);
+		}
+
+		else if (!librosporEditorial.isEmpty()) {
+			return new ResponseEntity<>(librosporEditorial, HttpStatus.OK);
+		}
+
+		Map<String, String> response = new HashMap<>();
+		response.put("message", "Lo sentimos, no pudimos encontrar tu búsqueda.");
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+
+	}
 
 }
-	

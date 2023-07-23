@@ -22,93 +22,86 @@ import pe.crisol.service.MotorizadoService;
 
 @RestController
 @RequestMapping("/motorizado")
-@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 public class MotorizadoController {
 
 	@Autowired
 	private MotorizadoService service;
-	
+
 	public MotorizadoController() {
 	}
-	
-	
+
 	@GetMapping("/listar")
-	public ResponseEntity<?> listar_GET(){
-		Collection<Motorizado> collection=service.listar();
-		if(collection.isEmpty()) {
+	public ResponseEntity<?> listar_GET() {
+		Collection<Motorizado> collection = service.listar();
+		if (collection.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}	
-		return new ResponseEntity<>(collection,HttpStatus.OK);
+		}
+		return new ResponseEntity<>(collection, HttpStatus.OK);
 	}
-	
-	
-    @PostMapping("/registrar")
-    public ResponseEntity<?> registrar_POST(@RequestBody Motorizado motorizado){
 
-        service.crear(motorizado);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Motorizado registrado correctamente.");
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-    
-    @PutMapping("/editar/{motorizadoId}")
-    public ResponseEntity<?> editar_PUT(@RequestBody Motorizado nmotorizado, @PathVariable Integer motorizadoId)
+	@PostMapping("/registrar")
+	public ResponseEntity<?> registrar_POST(@RequestBody Motorizado motorizado) {
 
-    {
-        Motorizado MotorizadoDb = service.buscar(motorizadoId);
-        Map<String, String> response = new HashMap<>();
+		service.crear(motorizado);
+		Map<String, String> response = new HashMap<>();
+		response.put("message", "Motorizado registrado correctamente.");
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+	}
 
-        if(MotorizadoDb!=null)
-        {
+	@PutMapping("/editar/{motorizadoId}")
+	public ResponseEntity<?> editar_PUT(@RequestBody Motorizado nmotorizado, @PathVariable Integer motorizadoId)
 
-        	MotorizadoDb.setNombres(nmotorizado.getNombres());
-        	
-        	MotorizadoDb.setApellidos(nmotorizado.getApellidos());
-        	
-        	MotorizadoDb.setDni(nmotorizado.getDni());
-        	
-        	MotorizadoDb.setPlaca(nmotorizado.getPlaca());
-        	
-            service.actualizar(MotorizadoDb);
-            
-            response.put("message", "Motorizado editado correctamente.");
-            
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+	{
+		Motorizado MotorizadoDb = service.buscar(motorizadoId);
+		Map<String, String> response = new HashMap<>();
 
-        }
-        response.put("message", "404 E");       
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);        
-    }
-    
-    @DeleteMapping("/borrar/{motorizadoId}")
-    public ResponseEntity<?> borrar_DELETE(@PathVariable Integer motorizadoId){
-        Motorizado MotorizadoDb = service.buscar(motorizadoId);
+		if (MotorizadoDb != null) {
 
-        if(MotorizadoDb!=null)
-        {
-        	service.eliminar(motorizadoId);
-        	
-        	return new ResponseEntity<>("Motorizado borrado!",HttpStatus.OK);
-        }
-        return new ResponseEntity<>("¡Motorizado no existe!",HttpStatus.NOT_FOUND); 	
-    }
-    
-    @GetMapping("/buscar/{motorizadoId}")
-    public ResponseEntity<?> buscar_GET(@PathVariable Integer motorizadoId){
+			MotorizadoDb.setNombres(nmotorizado.getNombres());
 
-        Motorizado MotorizadoDb = service.buscar(motorizadoId);
+			MotorizadoDb.setApellidos(nmotorizado.getApellidos());
 
-        if(MotorizadoDb!=null)
-        {
+			MotorizadoDb.setDni(nmotorizado.getDni());
 
-            return new ResponseEntity<>(MotorizadoDb,HttpStatus.OK);
+			MotorizadoDb.setPlaca(nmotorizado.getPlaca());
 
-        }
+			service.actualizar(MotorizadoDb);
 
-        return new ResponseEntity<>("¡Motorizado no existe!",HttpStatus.NOT_FOUND);
+			response.put("message", "Motorizado editado correctamente.");
 
-    }
-    
-    
-    
+			return ResponseEntity.status(HttpStatus.OK).body(response);
+
+		}
+		response.put("message", "404 E");
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+	}
+
+	@DeleteMapping("/borrar/{motorizadoId}")
+	public ResponseEntity<?> borrar_DELETE(@PathVariable Integer motorizadoId) {
+		Motorizado MotorizadoDb = service.buscar(motorizadoId);
+
+		if (MotorizadoDb != null) {
+			service.eliminar(motorizadoId);
+
+			return new ResponseEntity<>("Motorizado borrado!", HttpStatus.OK);
+		}
+		return new ResponseEntity<>("¡Motorizado no existe!", HttpStatus.NOT_FOUND);
+	}
+
+	@GetMapping("/buscar/{motorizadoId}")
+	public ResponseEntity<?> buscar_GET(@PathVariable Integer motorizadoId) {
+
+		Motorizado MotorizadoDb = service.buscar(motorizadoId);
+
+		if (MotorizadoDb != null) {
+
+			return new ResponseEntity<>(MotorizadoDb, HttpStatus.OK);
+
+		}
+
+		return new ResponseEntity<>("¡Motorizado no existe!", HttpStatus.NOT_FOUND);
+
+	}
+
 }
